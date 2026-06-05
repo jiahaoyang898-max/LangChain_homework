@@ -10,18 +10,17 @@ load_dotenv()
 from langchain_openai import ChatOpenAI
 
 # (1)
-# llm = ChatOpenAI(
-#     model="Pro/zai-org/GLM-5",
-#     api_key=os.getenv("GJLD_API_KEY"),
-#     base_url=os.getenv("GJLD_BASE_URL")
-# )
-# async def main():
-#         response = await llm.ainvoke("写一首快乐的歌曲")
-#         print(response.content)
-#         print("输入Token：", response.usage_metadata["input_tokens"])
-#         print("输出Token：", response.usage_metadata["output_tokens"])
-#         print("总Token：", response.usage_metadata["total_tokens"])
-# asyncio.run(main())
+llm = ChatOpenAI(
+    model="Pro/zai-org/GLM-5",
+    api_key=os.getenv("GJLD_API_KEY"),
+    base_url=os.getenv("GJLD_BASE_URL")
+)
+async def main():
+    with get_usage_metadata_callback() as cb:
+        response = await llm.ainvoke("写一首快乐的歌曲")
+        print(response.content)
+        print(cb.usage_metadata)
+asyncio.run(main())
 # (2)
 # llm = ChatOpenAI(
 #     model="Pro/zai-org/GLM-5",
@@ -33,28 +32,26 @@ from langchain_openai import ChatOpenAI
 #     "北京有什么好玩的？",
 #     "制定一份三天两晚的北京旅行！"
 # ]
-# response = llm.batch(que)
-# for q,r in zip(que,response):
-#     print(f"问题：{q}")
-#     print(f"回答：{r.content}")
-#     print("输入Token：", r.usage_metadata["input_tokens"])
-#     print("输出Token：", r.usage_metadata["output_tokens"])
-#     print("总Token：", r.usage_metadata["total_tokens"])
+# with get_usage_metadata_callback() as cb:
+#     response = llm.batch(que)
+#     for q,r in zip(que,response):
+#         print(f"问题：{q}")
+#         print(f"回答：{r.content}")
+#         print(cb.usage_metadata)
 
 # (3)
-llm = ChatOpenAI(
-    model="Pro/zai-org/GLM-5",
-    api_key=os.getenv("GJLD_API_KEY"),
-    base_url=os.getenv("GJLD_BASE_URL")
-)
-talk =[
-    SystemMessage(content="你是一个探店博主"),
-    HumanMessage(content="郑州的有哪些好吃的蛋糕房"),
-    AIMessage(content="推荐觉醒"),
-    HumanMessage(content="在什么地方呢？")
-]
-response = llm.invoke(talk)
-print(response.content)
-print("输入Token：", response.usage_metadata["input_tokens"])
-print("输出Token：", response.usage_metadata["output_tokens"])
-print("总Token：", response.usage_metadata["total_tokens"])
+# llm = ChatOpenAI(
+#     model="Pro/zai-org/GLM-5",
+#     api_key=os.getenv("GJLD_API_KEY"),
+#     base_url=os.getenv("GJLD_BASE_URL")
+# )
+# talk =[
+#     SystemMessage(content="你是一个探店博主"),
+#     HumanMessage(content="郑州的有哪些好吃的蛋糕房"),
+#     AIMessage(content="推荐觉醒"),
+#     HumanMessage(content="在什么地方呢？")
+# ]
+# with get_usage_metadata_callback() as cb:
+#     response = llm.invoke(talk)
+#     print(response.content)
+#     print(cb.usage_metadata)
